@@ -118,11 +118,11 @@ public:
 	uint8_t getPGA();
 	void setMUX(uint8_t mux);
 	void setByteOrder(uint8_t byteOrder);
-	void getByteOrder();
+	uint8_t getByteOrder();
 	void setBuffer(uint8_t bufen);
-	void getBuffer();
+	uint8_t getBuffer();
 	void setAutoCal(uint8_t acal);
-	void getAutoCal();
+	uint8_t getAutoCal();
 	void setGPIO(uint8_t dir0, uint8_t dir1, uint8_t dir2, uint8_t dir3);
 	void writeGPIO(uint8_t dir0value, uint8_t dir1value, uint8_t dir2value, uint8_t dir3value);
 	uint8_t readGPIO(uint8_t gpioPin);	
@@ -147,25 +147,22 @@ public:
 		
 	//Stop AD
 	void stopConversion();
-
+	
 private:
 
-void updateConvertConst(); // update voltage conversion constant
+void waitForLowDRDY(); // Block until DRDY is low
+void waitForHighDRDY(); // Block until DRDY is high
+void updateMUX(uint8_t muxValue);
 
-void waitForDRDY(); // Block until DRDY is low
+void updateConversionParameter(); //Refresh the conversion parameter based on the PGA
 
-float _CONVERT_CONST; // voltage conversion constant
-float _VREF; //Value of the reference voltage
+float _VREF = 0; //Value of the reference voltage
+float conversionParameter = 0; //PGA-dependent multiplier
 //Pins
 byte _DRDY_pin; //Pin assigned for DRDY
 byte _RESET_pin; //Pin assigned for RESET
 byte _SYNC_pin; //Pin assigned for SYNC
 byte _CS_pin; //Pin assigned for CS
-
-//Register-related variables
-uint8_t _registerAddress; //Value holding the address of the register we want to manipulate
-uint8_t _registerValueToWrite; //Value to be written on a selected register
-uint8_t _registerValuetoRead; //Value read from the selected register
 
 //Register values
 byte _DRATE; //Value of the DRATE register
